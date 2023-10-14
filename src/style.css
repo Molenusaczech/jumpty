@@ -1,0 +1,51 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  /*background-color: #242424;*/
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+.tile {
+  border: white 1px solid;
+  width: 25px;
+  height: 25px;
+  float: left;
+}
+
+.empty {
+  background-color: #242424;
+}
+
+.target {
+  background-color: #ff0000;
+}
+
+.row {
+  clear: both;
+}
+
+.playerSpot {
+  background-color: #00ff00;
+}
+
+.player {
+  background-color: blue !important;
+}
+
+.bomb {
+  background-color: #ff00ff !important;
+}
+
+.explosion {
+  background-color: #ffff00 !important;
+}
+
+.goalReached {
+  background-color: #00ffff;
+}

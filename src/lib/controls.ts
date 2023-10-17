@@ -1,7 +1,6 @@
-import { moveRight, moveLeft, moveSideRight, moveSideLeft } from "./position";
-import { renderBoard } from "./initBoard";
+import { move, moveSide } from "./position";
+import { renderBoard } from "./board";
 import { spawnBomb, curBomb, bombExplode } from "./bombHandler";
-
 function initControls() {
     document.addEventListener('keydown', (event) => {
         if (event.defaultPrevented) {
@@ -11,19 +10,23 @@ function initControls() {
         switch (event.code) {
             case 'KeyD':
                 console.log('move right');
-                moveRight();
+                //moveRight();
+                move("right");
                 break;
             case 'KeyA':
                 console.log('move left');
-                moveLeft();
+                move("left");
+                //moveLeft();
                 break;
             case 'KeyE':
                 console.log('move side right');
-                moveSideRight();
+                //moveSideRight();
+                moveSide("right");
                 break;
             case 'KeyQ':
                 console.log('move side left');
-                moveSideLeft();
+                //moveSideLeft();
+                moveSide("left");
                 break;
             case 'Space':
                 console.log('place bomb');

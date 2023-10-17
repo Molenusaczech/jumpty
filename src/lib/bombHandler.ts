@@ -1,10 +1,10 @@
 import { bombType } from "../interfaces/bombs";
 import { Side } from "./position";
 import { position } from "./position";
-import { level } from "./globals";
+import { level } from "./levelLoader";
 import { tileCoords } from "../interfaces/tileCoords";
 import { getExplosion } from "./explosionPatterns";
-import { renderBoard } from "./initBoard";
+import { renderBoard } from "./board";
 import { addScore } from "./score";
 
 interface curBombInterface {
@@ -19,6 +19,11 @@ let explosionTiles: tileCoords[] = [];
 let bombTickInterval: ReturnType<typeof setTimeout> | undefined = undefined;
 
 function spawnBomb() {
+
+    if (level.bombs.find((bomb) => bomb.type == selectedBomb)?.count == 0) {
+        console.log("no bombs left");
+        return;
+    }
 
     let positionIndexX = position.x;
     let positionIndexY = 0;
@@ -54,6 +59,8 @@ function spawnBomb() {
 
     bombTickInterval = setInterval(bombTick, 500);
     console.log(bombTickInterval);
+
+    level.bombs.find((bomb) => bomb.type == selectedBomb)!.count--;
 }
 
 function bombMove() {
@@ -62,8 +69,8 @@ function bombMove() {
         return;
     }
 
-    let positionIndexX = curBomb.pos.x;
-    let positionIndexY = curBomb.pos.y;
+    let positionIndexX = Number(curBomb.pos.x+"");
+    let positionIndexY =  Number(curBomb.pos.y+"");
     switch (position.side) {
         case "left":
             positionIndexX++;
@@ -79,12 +86,17 @@ function bombMove() {
             break;
     }
 
-    if (level.tiles[positionIndexY][positionIndexX].type != "empty") {
+    if (positionIndexX < 0 || positionIndexX > level.tiles[0].length - 1 || positionIndexY < 0 || positionIndexY > level.tiles.length - 1) {
         console.log("boom");
         bombExplode();
         return;
     }
 
+    if (level.tiles[positionIndexY][positionIndexX].type != "empty") {
+        console.log("boom");
+        bombExplode();
+        return;
+    }
     curBomb.pos.x = positionIndexX;
     curBomb.pos.y = positionIndexY;
 }
@@ -110,10 +122,14 @@ function bombExplode() {
     explosionTiles = explosion;
 
     explosion.forEach((tile) => {
-        if (level.tiles[tile.y][tile.x].type == "target") {
-            let targettile = level.tiles[tile.y][tile.x];
-            if (targettile.type == "target") addScore(targettile.value);
-            level.tiles[tile.y][tile.x].type = "empty";
+        if (level.tiles[tile.y]) {
+            if (level.tiles[tile.y][tile.x]) {
+                if (level.tiles[tile.y][tile.x].type == "target") {
+                    let targettile = level.tiles[tile.y][tile.x];
+                    if (targettile.type == "target") addScore(targettile.value);
+                    level.tiles[tile.y][tile.x].type = "empty";
+                }
+            }
         }
     });
 
@@ -128,4 +144,27 @@ function bombExplode() {
     }, 1000);
 }
 
-export { curBomb, selectedBomb, explosionTiles, spawnBomb, bombTick, bombExplode };
+function renderBombGui() {
+    let bombGui = document.createElement('div');
+    bombGui.id = 'bombGui';
+
+    level.bombs.forEach((bomb) => {
+        let bombButton = document.createElement('button');
+        bombButton.innerText = bomb.type + " (" + bomb.count + ")";
+
+        if (selectedBomb == bomb.type) bombButton.classList.add('selected');
+
+        if (bomb.count == 0) bombButton.disabled = true;
+
+        bombButton.onclick = () => {
+            selectedBomb = bomb.type;
+            renderBombGui();
+        };
+        bombGui.appendChild(bombButton);
+    });
+
+    if (document.body.querySelector("#bombGui")) document.body.removeChild(document.getElementById('bombGui')!);
+    document.body.appendChild(bombGui);
+}
+
+export { curBomb, selectedBomb, explosionTiles, spawnBomb, bombTick, bombExplode, renderBombGui };

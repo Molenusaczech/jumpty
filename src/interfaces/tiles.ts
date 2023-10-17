@@ -7,4 +7,8 @@ interface TargetTile {
     value: number;
 }
 
-export type Tile = EmptyTile | TargetTile;
+interface WallTile {
+    type: "wall";
+}
+
+export type Tile = EmptyTile | TargetTile | WallTile;

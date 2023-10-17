@@ -1,4 +1,5 @@
-import { level } from "./globals";
+import { level } from "./levelLoader";
+import { curBomb } from "./bombHandler";
 type Side = "left" | "right" | "top" | "bottom";
 
 interface PlayerPos {
@@ -62,5 +63,28 @@ function moveSideRight() {
     }
 }
 
+function move(direction: "left" | "right") {
+    if (curBomb) return;
+    if (direction == "left") {
+        moveLeft();
+    } else {
+        moveRight();
+    }
+}
+
+function moveSide(direction: "left" | "right") {
+    if (curBomb) return;
+    if (direction == "left") {
+        moveSideLeft();
+    } else {
+        moveSideRight();
+    }
+}
+
 export type { PlayerPos, Side };
-export { position, setPosition, moveRight, moveLeft, moveSideRight, moveSideLeft };
+export { 
+    position, 
+    setPosition, 
+    move,
+    moveSide
+};

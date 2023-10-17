@@ -1,4 +1,4 @@
-import { level } from "./globals";
+import { level } from "./levelLoader";
 let score: number = 0;
 
 function renderScore() {
